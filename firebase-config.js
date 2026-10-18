@@ -12,12 +12,12 @@
 // ============================================================================
 
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_STORAGE_BUCKET",
-  messagingSenderId: "PASTE_YOUR_SENDER_ID",
-  appId: "PASTE_YOUR_APP_ID"
+  apiKey: "AIzaSyB0e9DmcoZmRv9_ISjHPTN9Rn1j54pYy8k",
+  authDomain: "fabrics-by-sobia.firebaseapp.com",
+  projectId: "fabrics-by-sobia",
+  storageBucket: "fabrics-by-sobia.firebasestorage.app",
+  messagingSenderId: "96539953272",
+  appId: "1:96539953272:web:b29088af43ed5757bcc58d"
 };
 
 // True only when the owner has pasted real values above.
