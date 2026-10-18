@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabrics by Sobia — Premium Women's Eastern Wear</title>
+<meta name="description" content="Fabrics by Sobia — high-quality women's eastern wear. Browse the collection and order on WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf7f1; --card:#ffffff; --ink:#2b2320; --muted:#8a7f78;
+    --brand:#7a1f2b; --brand-dark:#5c1620; --gold:#c9a24b; --gold-soft:#f3e8d2;
+    --line:#e8ded2; --wa:#25d366; --wa-dark:#1da851;
+    --shadow:0 10px 30px rgba(90,40,45,.08); --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+  h1,h2,h3,.serif{font-family:'Playfair Display',Georgia,'Times New Roman',serif}
+  img{display:block;max-width:100%}
+  a{color:inherit}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+
+  /* Announcement */
+  #announce{display:none;background:var(--brand);color:#f8efdd;text-align:center;
+    font-size:.85rem;letter-spacing:.04em;padding:9px 16px}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(250,247,241,.94);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{font-family:'Playfair Display',Georgia,serif;font-size:1.45rem;font-weight:700;
+    color:var(--brand);text-decoration:none;letter-spacing:.02em}
+  .brand small{display:block;font-family:'Inter',sans-serif;font-size:.62rem;font-weight:500;
+    letter-spacing:.32em;color:var(--muted);text-transform:uppercase}
+  .nav-links{display:flex;gap:26px}
+  .nav-links a{text-decoration:none;font-size:.92rem;font-weight:500;color:var(--ink);opacity:.8}
+  .nav-links a:hover{opacity:1;color:var(--brand)}
+  .cart-btn{position:relative;background:var(--brand);color:#fff;border:0;border-radius:999px;
+    padding:10px 20px;font-size:.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px}
+  .cart-btn:hover{background:var(--brand-dark)}
+  .cart-count{background:var(--gold);color:#3a2a12;font-size:.75rem;font-weight:700;
+    min-width:22px;height:22px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;padding:0 6px}
+
+  /* Hero */
+  .hero{background:radial-gradient(1100px 420px at 50% -60px,#f6e9d4 0%,var(--bg) 60%);
+    text-align:center;padding:84px 20px 70px;border-bottom:1px solid var(--line)}
+  .hero .kicker{font-size:.75rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);
+    font-weight:600;margin-bottom:18px}
+  .hero h1{font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.12;color:var(--brand);margin-bottom:16px}
+  .hero p{max-width:620px;margin:0 auto 30px;color:var(--muted);font-size:1.06rem}
+  .btn{display:inline-block;border:0;cursor:pointer;text-decoration:none;font-weight:600;
+    border-radius:999px;padding:14px 32px;font-size:.95rem;transition:transform .12s ease,box-shadow .12s ease}
+  .btn:active{transform:scale(.97)}
+  .btn-brand{background:var(--brand);color:#fff;box-shadow:var(--shadow)}
+  .btn-brand:hover{background:var(--brand-dark)}
+  .btn-outline{background:transparent;color:var(--brand);border:1.5px solid var(--brand);margin-left:10px}
+  .btn-outline:hover{background:var(--brand);color:#fff}
+  .btn-wa{background:var(--wa);color:#fff}
+  .btn-wa:hover{background:var(--wa-dark)}
+
+  /* Sections */
+  section{padding:64px 0}
+  .sec-head{text-align:center;margin-bottom:34px}
+  .sec-head h2{font-size:2rem;color:var(--brand);margin-bottom:8px}
+  .sec-head p{color:var(--muted);max-width:560px;margin:0 auto}
+
+  /* Chips */
+  .chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:14px}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:9px 20px;
+    font-size:.88rem;font-weight:500;cursor:pointer;color:var(--ink)}
+  .chip:hover{border-color:var(--brand)}
+  .chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+  .chips.sub .chip{padding:7px 16px;font-size:.8rem}
+  .chips.sub .chip.active{background:var(--gold);border-color:var(--gold);color:#3a2a12}
+
+  /* Product grid */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .15s ease}
+  .card:hover{transform:translateY(-4px)}
+  .card .ph{aspect-ratio:3/4;background:linear-gradient(135deg,#efe4d3,#e2d3bd);
+    display:flex;align-items:center;justify-content:center;color:#a58f6f;
+    font-family:'Playfair Display',Georgia,serif;font-size:1.1rem;text-align:center;padding:12px}
+  .card img{width:100%;aspect-ratio:3/4;object-fit:cover}
+  .card .body{padding:16px}
+  .card .cat{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .card h3{font-size:1.08rem;margin:6px 0 4px;color:var(--ink)}
+  .card .price{font-weight:700;color:var(--brand);font-size:1.05rem}
+  .card .add{margin-top:12px;width:100%;background:var(--brand);color:#fff;border:0;border-radius:10px;
+    padding:11px;font-weight:600;font-size:.9rem;cursor:pointer}
+  .card .add:hover{background:var(--brand-dark)}
+  .empty{background:#fff;border:1.5px dashed var(--line);border-radius:var(--radius);
+    padding:56px 24px;text-align:center;color:var(--muted);grid-column:1/-1}
+  .empty h3{color:var(--brand);font-size:1.4rem;margin-bottom:8px}
+
+  /* Categories */
+  #categories{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cat-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+  .cat-card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px;cursor:pointer;transition:transform .15s ease}
+  .cat-card:hover{transform:translateY(-3px);border-color:var(--gold)}
+  .cat-card h3{color:var(--brand);font-size:1.3rem;margin-bottom:10px}
+  .cat-card ul{list-style:none}
+  .cat-card li{padding:6px 0;color:var(--muted);font-size:.92rem;border-top:1px dashed var(--line)}
+  .cat-card li:first-child{border-top:0}
+
+  /* Blog */
+  .post-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+  .post{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
+    box-shadow:var(--shadow);cursor:pointer}
+  .post img{width:100%;height:180px;object-fit:cover}
+  .post .ph{height:140px;background:linear-gradient(135deg,#f3e8d2,#e6d3ae);
+    display:flex;align-items:center;justify-content:center;color:#a5874f;
+    font-family:'Playfair Display',Georgia,serif}
+  .post .body{padding:20px}
+  .post h3{font-size:1.15rem;color:var(--brand);margin-bottom:8px}
+  .post p{font-size:.9rem;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;
+    -webkit-box-orient:vertical;overflow:hidden}
+
+  /* Catalog / about */
+  #catalog{background:var(--brand);color:#f3e7d3}
+  #catalog h2{color:#fff}
+  #catalog .sec-head p{color:#e3cfae}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:10px}
+  .step{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:var(--radius);padding:24px}
+  .step .n{font-family:'Playfair Display',Georgia,serif;font-size:1.8rem;color:var(--gold)}
+  .step h3{color:#fff;font-size:1.05rem;margin:8px 0 6px}
+  .step p{font-size:.9rem;color:#e9d9bd}
+
+  /* Contact */
+  #contact{text-align:center}
+  #contact .btn-wa{font-size:1.05rem;padding:16px 40px}
+
+  footer{background:#241d1a;color:#b9a99b;text-align:center;padding:34px 20px;font-size:.88rem}
+  footer .brand{color:#e9d9bd;font-size:1.2rem}
+  footer nav{margin:14px 0;display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
+  footer nav a{color:#b9a99b;text-decoration:none}
+  footer nav a:hover{color:#fff}
+
+  /* Floating WhatsApp */
+  .wa-float{position:fixed;right:20px;bottom:20px;z-index:60;width:58px;height:58px;border-radius:50%;
+    background:var(--wa);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 24px rgba(0,0,0,.25);transition:transform .12s ease}
+  .wa-float:hover{transform:scale(1.07);background:var(--wa-dark)}
+  .wa-float svg{width:30px;height:30px;fill:#fff}
+
+  /* Cart drawer */
+  .overlay{position:fixed;inset:0;background:rgba(30,20,18,.45);z-index:70;display:none}
+  .overlay.show{display:block}
+  .drawer{position:fixed;top:0;right:-420px;width:min(400px,94vw);height:100%;background:#fff;z-index:71;
+    display:flex;flex-direction:column;transition:right .25s ease;box-shadow:-12px 0 40px rgba(0,0,0,.15)}
+  .drawer.open{right:0}
+  .drawer header{position:static;background:#fff;border-bottom:1px solid var(--line)}
+  .drawer .d-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px}
+  .drawer .d-head h3{font-size:1.25rem;color:var(--brand)}
+  .drawer .close{background:none;border:0;font-size:1.5rem;cursor:pointer;color:var(--muted)}
+  .drawer .items{flex:1;overflow-y:auto;padding:10px 20px}
+  .ci{display:flex;gap:12px;padding:14px 0;border-bottom:1px dashed var(--line);align-items:center}
+  .ci img{width:64px;height:80px;object-fit:cover;border-radius:8px;background:#efe4d3}
+  .ci .ph{width:64px;height:80px;border-radius:8px;background:linear-gradient(135deg,#efe4d3,#e2d3bd);
+    display:flex;align-items:center;justify-content:center;font-size:.6rem;color:#a58f6f;text-align:center}
+  .ci .info{flex:1}
+  .ci .info h4{font-size:.92rem}
+  .ci .info .p{color:var(--brand);font-weight:600;font-size:.9rem}
+  .qty{display:flex;align-items:center;gap:10px;margin-top:6px}
+  .qty button{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);background:#fff;
+    cursor:pointer;font-size:1rem;line-height:1}
+  .qty button:hover{border-color:var(--brand);color:var(--brand)}
+  .ci .rm{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1.2rem}
+  .drawer .d-foot{padding:20px;border-top:1px solid var(--line);background:#fff}
+  .drawer .total{display:flex;justify-content:space-between;font-size:1.1rem;font-weight:700;margin-bottom:14px}
+  .drawer .total span:last-child{color:var(--brand)}
+  .drawer .btn-wa{width:100%;text-align:center}
+  .drawer .note{text-align:center;font-size:.78rem;color:var(--muted);margin-top:10px}
+  .cart-empty{text-align:center;color:var(--muted);padding:50px 10px}
+
+  /* Modal */
+  .modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:18px}
+  .modal.show{display:flex}
+  .modal .box{background:#fff;border-radius:18px;max-width:860px;width:100%;max-height:92vh;overflow-y:auto;
+    display:grid;grid-template-columns:1fr 1fr;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+  .modal .box.single{grid-template-columns:1fr;max-width:640px}
+  .modal .m-img{background:#f1e7d6;min-height:320px}
+  .modal .m-img img{width:100%;height:100%;object-fit:cover;min-height:320px}
+  .modal .m-body{padding:30px}
+  .modal .x{position:absolute;top:12px;right:16px;background:#fff;border:1px solid var(--line);
+    width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.2rem;color:var(--muted)}
+  .modal h2{color:var(--brand);font-size:1.6rem;margin:6px 0 8px}
+  .modal .price{font-size:1.3rem;font-weight:700;color:var(--brand);margin:10px 0}
+  .modal .desc{color:var(--muted);font-size:.95rem;margin-bottom:18px;white-space:pre-line}
+  .modal .row{display:flex;gap:12px;align-items:center;margin:16px 0}
+  .modal .row .qty{margin:0}
+  .modal .btn-brand{flex:1;text-align:center}
+
+  @media(max-width:760px){
+    .nav-links{display:none}
+    .modal .box{grid-template-columns:1fr}
+    .modal .m-img{min-height:240px}
+    section{padding:48px 0}
+  }
+</style>
+</head>
+<body>
+
+<div id="announce"></div>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">Fabrics by Sobia<small>Eastern Wear</small></a>
+    <nav class="nav-links">
+      <a href="#collection">Collection</a>
+      <a href="#categories">Categories</a>
+      <a href="#blog">Explore</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="cart-btn" id="cartOpen" aria-label="Open bag">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7l-1-4H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg>
+      Bag <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div class="wrap">
+    <div class="kicker">Premium Women's Eastern Wear</div>
+    <h1 id="heroTitle">Fabrics by Sobia</h1>
+    <p id="heroSubtitle">High-quality eastern wear, made to be loved.</p>
+    <a class="btn btn-brand" href="#collection">Shop the Collection</a><a class="btn btn-outline" id="heroWa" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+  </div>
+</div>
+
+<section id="collection">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>The Collection</h2>
+      <p>Every piece is from our in-store catalog. Tap any item to view it, add it to your bag, and order on WhatsApp.</p>
+    </div>
+    <div class="chips" id="parentChips"></div>
+    <div class="chips sub" id="childChips" style="display:none"></div>
+    <div class="grid" id="productGrid" style="margin-top:26px"></div>
+  </div>
+</section>
+
+<section id="categories">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Categories</h2>
+      <p>Browse by fabric and style.</p>
+    </div>
+    <div class="cat-cards" id="catCards"></div>
+  </div>
+</section>
+
+<section id="blog">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Explore</h2>
+      <p>Style notes, new arrivals and stories from the store.</p>
+    </div>
+    <div class="post-grid" id="postGrid"></div>
+  </div>
+</section>
+
+<section id="catalog">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>How Ordering Works</h2>
+      <p>Simple, personal, no accounts needed.</p>
+    </div>
+    <p id="aboutText" style="max-width:720px;margin:0 auto 30px;text-align:center;color:#e9d9bd"></p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Browse the collection</h3><p>Everything you see is available in our shop right now.</p></div>
+      <div class="step"><div class="n">2</div><h3>Add to your bag</h3><p>Pick your pieces and quantities — your bag saves automatically.</p></div>
+      <div class="step"><div class="n">3</div><h3>Order on WhatsApp</h3><p>One tap sends your full order to us on WhatsApp. We confirm and arrange delivery.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Contact Us</h2>
+      <p>Questions about size, fabric or delivery? Message us — we usually reply quickly.</p>
+    </div>
+    <a class="btn btn-wa" id="contactWa" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand serif">Fabrics by Sobia</div>
+    <nav>
+      <a href="#collection">Collection</a><a href="#categories">Categories</a>
+      <a href="#blog">Explore</a><a href="#contact">Contact</a>
+    </nav>
+    <div>© <span id="yr"></span> Fabrics by Sobia. All rights reserved.</div>
+  </div>
+</footer>
+
+<a class="wa-float" id="floatWa" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 32 32"><path d="M16 3C9.4 3 4 8.4 4 15c0 2.4.7 4.6 1.9 6.5L4 29l7.7-1.9c1.8 1 3.9 1.6 6.1 1.6 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.9 0-3.7-.5-5.2-1.5l-.4-.2-4.6 1.1 1.2-4.4-.3-.4c-1-1.6-1.6-3.5-1.6-5.5 0-5.4 4.4-9.8 9.9-9.8s9.9 4.4 9.9 9.8-4.5 9.9-9.9 9.9zm5.4-7.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.2-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.2-.6-.4z"/></svg>
+</a>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-label="Shopping bag">
+  <header><div class="d-head"><h3>Your Bag</h3><button class="close" id="cartClose" aria-label="Close">×</button></div></header>
+  <div class="items" id="cartItems"></div>
+  <div class="d-foot">
+    <div class="total"><span>Total</span><span id="cartTotal">Rs 0</span></div>
+    <a class="btn btn-wa" id="orderWa" href="#" target="_blank" rel="noopener">Order on WhatsApp</a>
+    <div class="note">Your order opens in WhatsApp with everything listed — just press send.</div>
+  </div>
+</aside>
+
+<div class="modal" id="qvModal">
+  <div class="box" id="qvBox">
+    <button class="x" data-close aria-label="Close">×</button>
+    <div class="m-img" id="qvImg"></div>
+    <div class="m-body">
+      <div class="cat" id="qvCat" style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600"></div>
+      <h2 id="qvName"></h2>
+      <div class="price" id="qvPrice"></div>
+      <div class="desc" id="qvDesc"></div>
+      <div class="row">
+        <div class="qty">
+          <button id="qvMinus" aria-label="Decrease">−</button>
+          <span id="qvQty">1</span>
+          <button id="qvPlus" aria-label="Increase">+</button>
+        </div>
+        <button class="btn btn-brand" id="qvAdd">Add to Bag</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="postModal">
+  <div class="box single">
+    <button class="x" data-close aria-label="Close">×</button>
+    <div class="m-body">
+      <h2 id="pmTitle"></h2>
+      <div class="desc" id="pmBody"></div>
+    </div>
+  </div>
+</div>
+
+<script src="firebase-config.js"></script>
+<script type="importmap">
+{"imports":{
+  "firebase/app":"https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js",
+  "firebase/firestore":"https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"
+}}
+</script>
+<script type="module">
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs, getDoc, doc, query, orderBy } from "firebase/firestore";
+
+/* ---------------- state ---------------- */
+let db = null;
+const DEFAULT_WA = "923365061287";
+const site = {
+  heroTitle: "Fabrics by Sobia",
+  heroSubtitle: "High-quality eastern wear, made to be loved.",
+  announcement: "",
+  aboutText: "We sell high-quality women's eastern wear. Everything in this collection is available in our shop — order directly on WhatsApp and we will take care of the rest.",
+  whatsappNumber: DEFAULT_WA
+};
+let categories = [];   // {id,name,parentId,order}
+let products = [];     // {id,name,price,categoryId,description,imageUrl}
+let posts = [];        // {id,title,body,imageUrl}
+let selParent = "all", selChild = null;
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("fsb_cart") || "[]"); } catch(e){ cart = []; }
+let qvId = null, qvQty = 1;
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => "Rs " + Number(n || 0).toLocaleString("en-US");
+const waLink = text => "https://wa.me/" + (site.whatsappNumber || DEFAULT_WA) + "?text=" + encodeURIComponent(text);
+const prodMap = () => Object.fromEntries(products.map(p => [p.id, p]));
+const catMap = () => Object.fromEntries(categories.map(c => [c.id, c]));
+function catLabel(p){
+  const c = catMap()[p.categoryId];
+  if(!c) return "Collection";
+  if(c.parentId && catMap()[c.parentId]) return esc(catMap()[c.parentId].name) + " · " + esc(c.name);
+  return esc(c.name);
+}
+function saveCart(){ localStorage.setItem("fsb_cart", JSON.stringify(cart)); }
+function cartCount(){ return cart.reduce((a,i)=>a+i.qty,0); }
+function cartTotal(){ const m=prodMap(); return cart.reduce((a,i)=>a+(m[i.id]?m[i.id].price*i.qty:0),0); }
+
+/* ---------------- firebase ---------------- */
+async function loadData(){
+  if (typeof FIREBASE_CONFIGURED === "undefined" || !FIREBASE_CONFIGURED){
+    console.warn("[Fabrics by Sobia] Firebase is not configured yet — showing empty states. See README.md to connect your project.");
+    return;
+  }
+  try{
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    const [cSnap, pSnap, sSnap, bSnap] = await Promise.all([
+      getDocs(query(collection(db,"categories"), orderBy("order"))),
+      getDocs(query(collection(db,"products"), orderBy("createdAt","desc"))),
+      getDoc(doc(db,"siteContent","main")),
+      getDocs(query(collection(db,"posts"), orderBy("createdAt","desc")))
+    ]);
+    categories = cSnap.docs.map(d => ({id:d.id, ...d.data()}));
+    products   = pSnap.docs.map(d => ({id:d.id, ...d.data()}));
+    posts      = bSnap.docs.map(d => ({id:d.id, ...d.data()}));
+    if (sSnap.exists()) Object.assign(site, sSnap.data());
+  }catch(e){
+    console.warn("[Fabrics by Sobia] Could not load store data:", e.message);
+  }
+}
+
+/* ---------------- render ---------------- */
+function renderStatic(){
+  document.getElementById("yr").textContent = new Date().getFullYear();
+  if (site.announcement){
+    const a = $("announce"); a.textContent = site.announcement; a.style.display = "block";
+  }
+  $("heroTitle").textContent = site.heroTitle;
+  $("heroSubtitle").textContent = site.heroSubtitle;
+  $("aboutText").textContent = site.aboutText;
+  const chat = waLink("Assalam-o-Alaikum, Fabrics by Sobia! I have a question about your collection.");
+  ["heroWa","contactWa","floatWa"].forEach(id => { $(id).href = chat; });
+}
+function parents(){ return categories.filter(c=>!c.parentId).sort((a,b)=>(a.order||0)-(b.order||0)); }
+function childrenOf(pid){ return categories.filter(c=>c.parentId===pid).sort((a,b)=>(a.order||0)-(b.order||0)); }
+function visibleProducts(){
+  if (selParent === "all") return products;
+  const kids = new Set(childrenOf(selParent).map(c=>c.id));
+  let list = products.filter(p => p.categoryId===selParent || kids.has(p.categoryId));
+  if (selChild) list = list.filter(p => p.categoryId===selChild);
+  return list;
+}
+function renderChips(){
+  const pc = $("parentChips"), cc = $("childChips");
+  if (!categories.length){ pc.innerHTML=""; cc.style.display="none"; return; }
+  pc.innerHTML = `<button class="chip${selParent==="all"?" active":""}" data-p="all">All</button>` +
+    parents().map(c=>`<button class="chip${selParent===c.id?" active":""}" data-p="${c.id}">${esc(c.name)}</button>`).join("");
+  pc.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ selParent=b.dataset.p; selChild=null; renderChips(); renderGrid(); });
+  const kids = selParent==="all" ? [] : childrenOf(selParent);
+  if (kids.length){
+    cc.style.display="flex";
+    cc.innerHTML = kids.map(c=>`<button class="chip${selChild===c.id?" active":""}" data-c="${c.id}">${esc(c.name)}</button>`).join("");
+    cc.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ selChild = selChild===b.dataset.c?null:b.dataset.c; renderChips(); renderGrid(); });
+  } else cc.style.display="none";
+}
+function renderGrid(){
+  const g = $("productGrid"), list = visibleProducts();
+  if (!list.length){
+    g.innerHTML = `<div class="empty"><h3>New Collection Coming Soon</h3>
+      <p>Our latest pieces are being added. Tap below to ask us on WhatsApp.</p>
+      <p style="margin-top:16px"><a class="btn btn-wa" target="_blank" rel="noopener"
+      href="${waLink("Assalam-o-Alaikum, Fabrics by Sobia! Please share your latest collection.")}">Ask on WhatsApp</a></p></div>`;
+    return;
+  }
+  g.innerHTML = list.map(p=>`
+    <div class="card" data-id="${p.id}">
+      ${p.imageUrl ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.name)}" loading="lazy">`
+                   : `<div class="ph">Fabrics<br>by Sobia</div>`}
+      <div class="body">
+        <div class="cat">${catLabel(p)}</div>
+        <h3>${esc(p.name)}</h3>
+        <div class="price">${fmt(p.price)}</div>
+        <button class="add" data-add="${p.id}">Add to Bag</button>
+      </div>
+    </div>`).join("");
+  g.querySelectorAll("[data-add]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); addToCart(b.dataset.add,1); });
+  g.querySelectorAll(".card").forEach(c=>c.onclick=()=>openQV(c.dataset.id));
+}
+function renderCatCards(){
+  const w = $("catCards"), ps = parents();
+  if (!ps.length){
+    w.innerHTML = `<div class="empty"><h3>Categories Coming Soon</h3><p>We're organizing the collection.</p></div>`;
+    return;
+  }
+  w.innerHTML = ps.map(c=>{
+    const kids = childrenOf(c.id);
+    return `<div class="cat-card" data-p="${c.id}"><h3>${esc(c.name)}</h3>
+      <ul>${kids.length ? kids.map(k=>`<li>${esc(k.name)}</li>`).join("") : `<li>View all ${esc(c.name)}</li>`}</ul></div>`;
+  }).join("");
+  w.querySelectorAll(".cat-card").forEach(el=>el.onclick=()=>{
+    selParent=el.dataset.p; selChild=null; renderChips(); renderGrid();
+    document.getElementById("collection").scrollIntoView({behavior:"smooth"});
+  });
+}
+function renderPosts(){
+  const w = $("postGrid");
+  if (!posts.length){
+    w.innerHTML = `<div class="empty"><h3>Stories Coming Soon</h3><p>Style notes and new arrivals will appear here.</p></div>`;
+    return;
+  }
+  w.innerHTML = posts.map(p=>`
+    <div class="post" data-id="${p.id}">
+      ${p.imageUrl?`<img src="${esc(p.imageUrl)}" alt="${esc(p.title)}" loading="lazy">`:`<div class="ph">Fabrics by Sobia</div>`}
+      <div class="body"><h3>${esc(p.title)}</h3><p>${esc((p.body||"").slice(0,140))}…</p></div>
+    </div>`).join("");
+  w.querySelectorAll(".post").forEach(el=>el.onclick=()=>{
+    const p = posts.find(x=>x.id===el.dataset.id); if(!p) return;
+    $("pmTitle").textContent = p.title; $("pmBody").textContent = p.body||"";
+    $("postModal").classList.add("show");
+  });
+}
+
+/* ---------------- quick view ---------------- */
+function openQV(id){
+  const p = prodMap()[id]; if(!p) return;
+  qvId=id; qvQty=1; $("qvQty").textContent="1";
+  $("qvImg").innerHTML = p.imageUrl ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.name)}">`
+    : `<div style="display:flex;align-items:center;justify-content:center;height:100%;min-height:320px;color:#a58f6f;font-family:'Playfair Display',Georgia,serif">Fabrics by Sobia</div>`;
+  $("qvCat").innerHTML = catLabel(p);
+  $("qvName").textContent = p.name;
+  $("qvPrice").textContent = fmt(p.price);
+  $("qvDesc").textContent = p.description || "";
+  $("qvModal").classList.add("show");
+}
+$("qvPlus").onclick = ()=>{ qvQty++; $("qvQty").textContent=qvQty; };
+$("qvMinus").onclick = ()=>{ if(qvQty>1){qvQty--; $("qvQty").textContent=qvQty;} };
+$("qvAdd").onclick = ()=>{ addToCart(qvId, qvQty); $("qvModal").classList.remove("show"); };
+
+/* ---------------- cart ---------------- */
+function addToCart(id, qty){
+  const it = cart.find(i=>i.id===id);
+  if (it) it.qty += qty; else cart.push({id, qty});
+  saveCart(); updateCartBadge(); renderCartItems();
+  openDrawer();
+}
+function updateCartBadge(){ $("cartCount").textContent = cartCount(); }
+function renderCartItems(){
+  const w = $("cartItems"), m = prodMap();
+  cart = cart.filter(i=>m[i.id]);
+  if (!cart.length){
+    w.innerHTML = `<div class="cart-empty"><h3 class="serif" style="color:var(--brand);margin-bottom:8px">Your bag is empty</h3><p>Add pieces from the collection to get started.</p></div>`;
+  } else {
+    w.innerHTML = cart.map(i=>{ const p=m[i.id]; return `
+      <div class="ci">
+        ${p.imageUrl?`<img src="${esc(p.imageUrl)}" alt="">`:`<div class="ph">FSB</div>`}
+        <div class="info"><h4>${esc(p.name)}</h4><div class="p">${fmt(p.price)}</div>
+          <div class="qty"><button data-dec="${i.id}">−</button><span>${i.qty}</span><button data-inc="${i.id}">+</button></div>
+        </div>
+        <button class="rm" data-rm="${i.id}" aria-label="Remove">×</button>
+      </div>`;}).join("");
+    w.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{cart.find(i=>i.id===b.dataset.inc).qty++; saveCart(); updateCartBadge(); renderCartItems();});
+    w.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const it=cart.find(i=>i.id===b.dataset.dec); it.qty--; if(it.qty<1) cart=cart.filter(i=>i!==it); saveCart(); updateCartBadge(); renderCartItems();});
+    w.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{cart=cart.filter(i=>i.id!==b.dataset.rm); saveCart(); updateCartBadge(); renderCartItems();});
+  }
+  $("cartTotal").textContent = fmt(cartTotal());
+  const btn = $("orderWa");
+  if (cart.length){
+    const lines = cart.map((i,x)=>{const p=m[i.id]; return `${x+1}. ${p.name} × ${i.qty} — ${fmt(p.price*i.qty)}`;});
+    const msg = `Assalam-o-Alaikum, Fabrics by Sobia!\nI would like to place this order:\n\n${lines.join("\n")}\n\nTotal: ${fmt(cartTotal())}\n\nName:\nAddress:\nCity:`;
+    btn.href = waLink(msg); btn.style.opacity="1"; btn.style.pointerEvents="auto";
+  } else { btn.href="#"; btn.style.opacity=".45"; btn.style.pointerEvents="none"; }
+}
+function openDrawer(){ renderCartItems(); $("drawer").classList.add("open"); $("overlay").classList.add("show"); }
+function closeDrawer(){ $("drawer").classList.remove("open"); $("overlay").classList.remove("show"); }
+$("cartOpen").onclick = openDrawer;
+$("cartClose").onclick = closeDrawer;
+$("overlay").onclick = ()=>{ closeDrawer(); document.querySelectorAll(".modal.show").forEach(m=>m.classList.remove("show")); };
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").classList.remove("show"));
+
+/* ---------------- boot ---------------- */
+(async function(){
+  await loadData();
+  renderStatic();
+  renderChips();
+  renderGrid();
+  renderCatCards();
+  renderPosts();
+  updateCartBadge();
+  renderCartItems();
+})();
+</script>
+</body>
+</html>
