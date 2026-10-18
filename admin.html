@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Fabrics by Sobia</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f4efe8;--card:#fff;--ink:#2b2320;--muted:#8a7f78;--brand:#7a1f2b;
+    --brand-dark:#5c1620;--gold:#c9a24b;--line:#e8ded2;--radius:12px;--danger:#b3261e}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+  h1,h2,h3,.serif{font-family:'Playfair Display',Georgia,serif}
+  .wrap{max-width:1020px;margin:0 auto;padding:0 20px}
+
+  /* Login */
+  #loginView{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:44px 40px;
+    width:100%;max-width:400px;box-shadow:0 20px 60px rgba(90,40,45,.1);text-align:center}
+  .login-card h1{color:var(--brand);font-size:1.7rem;margin-bottom:4px}
+  .login-card p{color:var(--muted);font-size:.9rem;margin-bottom:26px}
+  .field{margin-bottom:14px;text-align:left}
+  .field label{display:block;font-size:.82rem;font-weight:600;margin-bottom:6px}
+  .field input,.field textarea,.field select{width:100%;border:1.5px solid var(--line);border-radius:10px;
+    padding:11px 13px;font-size:.95rem;font-family:inherit;background:#fff;color:var(--ink)}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--brand)}
+  .field textarea{min-height:90px;resize:vertical}
+  .btn{display:inline-block;border:0;cursor:pointer;font-weight:600;border-radius:10px;
+    padding:12px 24px;font-size:.93rem;text-decoration:none}
+  .btn-brand{background:var(--brand);color:#fff;width:100%}
+  .btn-brand:hover{background:var(--brand-dark)}
+  .btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--brand);color:var(--brand)}
+  .btn-sm{padding:8px 14px;font-size:.82rem;width:auto}
+  .btn-danger{background:#fff;border:1.5px solid #eec5c2;color:var(--danger)}
+  .btn-danger:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .err{display:none;background:#fdecea;color:var(--danger);border-radius:10px;
+    padding:11px 14px;font-size:.88rem;margin-bottom:14px;text-align:left}
+  .hint{font-size:.8rem;color:var(--muted);margin-top:16px}
+
+  /* App */
+  #appView{display:none;min-height:100vh}
+  .topbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .topbar .brand{font-family:'Playfair Display',Georgia,serif;font-weight:700;color:var(--brand);font-size:1.2rem}
+  .topbar .brand span{font-family:'Inter',sans-serif;font-size:.68rem;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--muted);margin-left:10px}
+  .tabs{display:flex;gap:6px;background:#fff;border-bottom:1px solid var(--line);
+    position:sticky;top:64px;z-index:19;overflow-x:auto}
+  .tabs .wrap{display:flex;gap:6px}
+  .tab{border:0;background:none;padding:15px 18px;font-size:.92rem;font-weight:600;color:var(--muted);
+    cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+  .tab.active{color:var(--brand);border-bottom-color:var(--brand)}
+  main{padding:30px 0 70px}
+  .pane{display:none}
+  .pane.active{display:block}
+  .pane-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+  .pane-head h2{font-size:1.5rem;color:var(--brand)}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;margin-bottom:16px;box-shadow:0 6px 18px rgba(90,40,45,.05)}
+  .card h3{font-size:1.1rem;margin-bottom:14px;color:var(--brand)}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .frow .full{grid-column:1/-1}
+  @media(max-width:640px){.frow{grid-template-columns:1fr}}
+
+  .list-item{display:flex;gap:14px;align-items:center;background:#fff;border:1px solid var(--line);
+    border-radius:var(--radius);padding:14px;margin-bottom:12px}
+  .list-item img{width:58px;height:72px;object-fit:cover;border-radius:8px;background:#efe4d3;flex-shrink:0}
+  .list-item .ph{width:58px;height:72px;border-radius:8px;flex-shrink:0;
+    background:linear-gradient(135deg,#efe4d3,#e2d3bd);display:flex;align-items:center;
+    justify-content:center;font-size:.6rem;color:#a58f6f;text-align:center}
+  .list-item .info{flex:1;min-width:0}
+  .list-item .info b{display:block;font-size:.95rem}
+  .list-item .info small{color:var(--muted);font-size:.8rem}
+  .list-item .actions{display:flex;gap:8px;flex-shrink:0}
+  .tag{display:inline-block;background:var(--gold);color:#3a2a12;font-size:.68rem;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 10px;margin-top:4px}
+
+  .preview-img{max-width:180px;border-radius:10px;margin-top:10px;display:none}
+  .ok{display:none;background:#e7f6ec;color:#1c7a38;border-radius:10px;padding:11px 14px;
+    font-size:.88rem;margin-bottom:14px}
+  .muted{color:var(--muted);font-size:.88rem}
+  .hidden-form{display:none;margin-bottom:20px}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginView">
+  <div class="login-card">
+    <h1 class="serif">Fabrics by Sobia</h1>
+    <p>Owner dashboard — sign in to manage your shop.</p>
+    <div class="err" id="loginErr"></div>
+    <div class="field"><label>Email</label><input type="email" id="email" autocomplete="username" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input type="password" id="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn btn-brand" id="loginBtn">Sign In</button>
+    <div class="hint" id="cfgHint" style="display:none">Firebase is not configured yet.<br>See README.md to connect your project first.</div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="appView">
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">Fabrics by Sobia <span>Dashboard</span></div>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Sign Out</button>
+    </div>
+  </div>
+  <div class="tabs"><div class="wrap" style="padding:0 20px">
+    <button class="tab active" data-tab="products">Products</button>
+    <button class="tab" data-tab="categories">Categories</button>
+    <button class="tab" data-tab="content">Site Content</button>
+    <button class="tab" data-tab="blog">Blog</button>
+  </div></div>
+
+  <main><div class="wrap">
+
+    <!-- PRODUCTS -->
+    <div class="pane active" id="pane-products">
+      <div class="pane-head"><h2>Products</h2><button class="btn btn-brand btn-sm" id="addProductBtn" style="width:auto">+ Add Product</button></div>
+      <div class="card hidden-form" id="productFormCard">
+        <h3 id="pfTitle">Add Product</h3>
+        <div class="ok" id="pfOk">Saved.</div>
+        <input type="hidden" id="pfId">
+        <div class="frow">
+          <div class="field"><label>Product name *</label><input id="pfName" placeholder="e.g. Premium Lawn 3-Piece"></div>
+          <div class="field"><label>Price (PKR) *</label><input id="pfPrice" type="number" min="0" placeholder="e.g. 4850"></div>
+          <div class="field"><label>Category *</label><select id="pfCategory"></select></div>
+          <div class="field"><label>Photo</label><input id="pfImage" type="file" accept="image/*"><img class="preview-img" id="pfPreview" alt=""></div>
+          <div class="field full"><label>Description</label><textarea id="pfDesc" placeholder="Fabric, sizes, what's included…"></textarea></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn btn-brand btn-sm" id="pfSave" style="width:auto">Save Product</button>
+          <button class="btn btn-ghost btn-sm" id="pfCancel">Cancel</button>
+        </div>
+      </div>
+      <div id="productList"></div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="pane" id="pane-categories">
+      <div class="pane-head"><h2>Categories</h2><button class="btn btn-brand btn-sm" id="addCatBtn" style="width:auto">+ Add Category</button></div>
+      <div class="card hidden-form" id="catFormCard">
+        <h3 id="cfTitle">Add Category</h3>
+        <input type="hidden" id="cfId">
+        <div class="frow">
+          <div class="field"><label>Category name *</label><input id="cfName" placeholder="e.g. Lawn"></div>
+          <div class="field"><label>Parent category</label><select id="cfParent"></select></div>
+          <div class="field full"><label>Sort order <small class="muted">(lower shows first)</small></label><input id="cfOrder" type="number" value="0"></div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn btn-brand btn-sm" id="cfSave" style="width:auto">Save Category</button>
+          <button class="btn btn-ghost btn-sm" id="cfCancel">Cancel</button>
+        </div>
+      </div>
+      <p class="muted" style="margin-bottom:14px">Tip: create parent categories first (e.g. Women), then add sub-categories under them (e.g. Lawn, Chiffon, Kurtis).</p>
+      <div id="catList"></div>
+    </div>
+
+    <!-- SITE CONTENT -->
+    <div class="pane" id="pane-content">
+      <div class="pane-head"><h2>Site Content</h2></div>
+      <div class="card">
+        <div class="ok" id="ctOk">Saved — the shop updates immediately.</div>
+        <div class="field"><label>Hero title</label><input id="ctHeroTitle"></div>
+        <div class="field"><label>Hero subtitle</label><textarea id="ctHeroSub"></textarea></div>
+        <div class="field"><label>Announcement bar <small class="muted">(leave empty to hide)</small></label><input id="ctAnnounce"></div>
+        <div class="field"><label>About text <small class="muted">(shown in "How Ordering Works")</small></label><textarea id="ctAbout"></textarea></div>
+        <div class="field"><label>WhatsApp number <small class="muted">(digits only, with country code — used in order links)</small></label><input id="ctWa" placeholder="923365061287"></div>
+        <button class="btn btn-brand btn-sm" id="ctSave" style="width:auto">Save Content</button>
+      </div>
+    </div>
+
+    <!-- BLOG -->
+    <div class="pane" id="pane-blog">
+      <div class="pane-head"><h2>Blog / Explore</h2><button class="btn btn-brand btn-sm" id="addPostBtn" style="width:auto">+ Add Post</button></div>
+      <div class="card hidden-form" id="postFormCard">
+        <h3 id="bfTitle">Add Post</h3>
+        <input type="hidden" id="bfId">
+        <div class="field"><label>Title *</label><input id="bfName" placeholder="Post title"></div>
+        <div class="field"><label>Image (optional)</label><input id="bfImage" type="file" accept="image/*"><img class="preview-img" id="bfPreview" alt=""></div>
+        <div class="field"><label>Body *</label><textarea id="bfBody" style="min-height:160px" placeholder="Write your post…"></textarea></div>
+        <div style="display:flex;gap:10px;margin-top:6px">
+          <button class="btn btn-brand btn-sm" id="bfSave" style="width:auto">Save Post</button>
+          <button class="btn btn-ghost btn-sm" id="bfCancel">Cancel</button>
+        </div>
+      </div>
+      <div id="postList"></div>
+    </div>
+
+  </div></main>
+</div>
+
+<script src="firebase-config.js"></script>
+<script type="importmap">
+{"imports":{
+  "firebase/app":"https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js",
+  "firebase/firestore":"https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js",
+  "firebase/auth":"https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js",
+  "firebase/storage":"https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js"
+}}
+</script>
+<script type="module">
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs, getDoc, doc, addDoc, setDoc, updateDoc, deleteDoc, query, orderBy, where, serverTimestamp } from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+
+/* ---------------- helpers ---------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => "Rs " + Number(n || 0).toLocaleString("en-US");
+let db=null, auth=null, storage=null, app=null;
+let categories=[], products=[], siteDoc={};
+
+function loginError(msg){ const e=$("loginErr"); e.textContent=msg; e.style.display="block"; }
+
+/* ---------------- boot / auth gate ---------------- */
+if (typeof FIREBASE_CONFIGURED === "undefined" || !FIREBASE_CONFIGURED){
+  $("cfgHint").style.display = "block";
+  $("loginBtn").onclick = () => loginError("Firebase is not configured yet. Follow README.md to connect your project, then sign in.");
+} else {
+  try{
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app); auth = getAuth(app); storage = getStorage(app);
+  }catch(e){ loginError("Could not start Firebase: " + e.message); }
+}
+if (auth){
+  onAuthStateChanged(auth, user => {
+    if (user){ $("loginView").style.display="none"; $("appView").style.display="block"; refreshAll(); }
+    else { $("loginView").style.display="flex"; $("appView").style.display="none"; }
+  });
+  $("loginBtn").onclick = async () => {
+    loginError(""); $("loginErr").style.display="none";
+    try{ await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); }
+    catch(e){
+      const m = {"auth/invalid-credential":"Wrong email or password.",
+                 "auth/user-not-found":"Wrong email or password.",
+                 "auth/wrong-password":"Wrong email or password.",
+                 "auth/invalid-email":"That email address looks invalid.",
+                 "auth/too-many-requests":"Too many attempts — try again in a few minutes."}[e.code];
+      loginError(m || ("Sign-in failed: " + e.message));
+    }
+  };
+  $("password").addEventListener("keydown", e=>{ if(e.key==="Enter") $("loginBtn").click(); });
+  $("logoutBtn").onclick = () => signOut(auth);
+}
+
+/* ---------------- tabs ---------------- */
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".pane").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active"); $("pane-"+t.dataset.tab).classList.add("active");
+});
+
+/* ---------------- data ---------------- */
+const catMap = () => Object.fromEntries(categories.map(c=>[c.id,c]));
+function catLabel(id){
+  const c = catMap()[id]; if(!c) return "—";
+  return c.parentId && catMap()[c.parentId] ? catMap()[c.parentId].name + " › " + c.name : c.name;
+}
+async function refreshAll(){
+  const [cS,pS,sS,bS] = await Promise.all([
+    getDocs(query(collection(db,"categories"), orderBy("order"))),
+    getDocs(query(collection(db,"products"), orderBy("createdAt","desc"))),
+    getDoc(doc(db,"siteContent","main")),
+    getDocs(query(collection(db,"posts"), orderBy("createdAt","desc")))
+  ]);
+  categories = cS.docs.map(d=>({id:d.id,...d.data()}));
+  products = pS.docs.map(d=>({id:d.id,...d.data()}));
+  window._posts = bS.docs.map(d=>({id:d.id,...d.data()}));
+  siteDoc = sS.exists() ? sS.data() : {};
+  renderProducts(); renderCats(); renderContent(); renderPosts();
+}
+async function uploadImage(file, folder){
+  const r = ref(storage, folder + "/" + Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9._-]/g,"_"));
+  await uploadBytes(r, file);
+  return { url: await getDownloadURL(r), path: r.fullPath };
+}
+async function removeImage(path){ if(!path) return; try{ await deleteObject(ref(storage, path)); }catch(e){} }
+
+/* ---------------- products ---------------- */
+function fillCatSelect(sel, includeEmpty){
+  const ps = categories.filter(c=>!c.parentId).sort((a,b)=>(a.order||0)-(b.order||0));
+  let h = includeEmpty ? "" : "";
+  ps.forEach(p=>{
+    h += `<option value="${p.id}">${esc(p.name)}</option>`;
+    categories.filter(c=>c.parentId===p.id).sort((a,b)=>(a.order||0)-(b.order||0))
+      .forEach(k=>{ h += `<option value="${k.id}">— ${esc(k.name)}</option>`; });
+  });
+  const orphans = categories.filter(c=>c.parentId && !catMap()[c.parentId]);
+  orphans.forEach(c=>{ h += `<option value="${c.id}">${esc(c.name)}</option>`; });
+  sel.innerHTML = h || `<option value="">(create a category first)</option>`;
+}
+function renderProducts(){
+  const w = $("productList");
+  if(!products.length){ w.innerHTML = `<div class="card"><p class="muted">No products yet. Click <b>+ Add Product</b> to add your first one — it appears on the shop instantly.</p></div>`; return; }
+  w.innerHTML = products.map(p=>`
+    <div class="list-item">
+      ${p.imageUrl?`<img src="${esc(p.imageUrl)}" alt="">`:`<div class="ph">No photo</div>`}
+      <div class="info"><b>${esc(p.name)}</b><small>${fmt(p.price)} · ${esc(catLabel(p.categoryId))}</small></div>
+      <div class="actions">
+        <button class="btn btn-ghost btn-sm" data-edit-p="${p.id}">Edit</button>
+        <button class="btn btn-danger btn-sm" data-del-p="${p.id}">Delete</button>
+      </div>
+    </div>`).join("");
+  w.querySelectorAll("[data-edit-p]").forEach(b=>b.onclick=()=>editProduct(b.dataset.editP));
+  w.querySelectorAll("[data-del-p]").forEach(b=>b.onclick=()=>delProduct(b.dataset.delP));
+}
+function resetProductForm(){
+  $("pfId").value=""; $("pfName").value=""; $("pfPrice").value=""; $("pfDesc").value="";
+  $("pfImage").value=""; $("pfPreview").style.display="none"; $("pfOk").style.display="none";
+  $("pfTitle").textContent="Add Product"; fillCatSelect($("pfCategory"));
+}
+$("addProductBtn").onclick = ()=>{ resetProductForm(); $("productFormCard").style.display="block"; $("pfName").focus(); };
+$("pfCancel").onclick = ()=>{ $("productFormCard").style.display="none"; };
+$("pfImage").onchange = e=>{ const f=e.target.files[0]; if(f){ $("pfPreview").src=URL.createObjectURL(f); $("pfPreview").style.display="block"; } };
+function editProduct(id){
+  const p = products.find(x=>x.id===id); if(!p) return;
+  resetProductForm();
+  $("pfTitle").textContent="Edit Product"; $("pfId").value=id;
+  $("pfName").value=p.name||""; $("pfPrice").value=p.price??""; $("pfDesc").value=p.description||"";
+  $("pfCategory").value=p.categoryId||"";
+  if(p.imageUrl){ $("pfPreview").src=p.imageUrl; $("pfPreview").style.display="block"; }
+  $("productFormCard").style.display="block"; window.scrollTo({top:0,behavior:"smooth"});
+}
+$("pfSave").onclick = async ()=>{
+  const name=$("pfName").value.trim(), price=Number($("pfPrice").value), cat=$("pfCategory").value;
+  if(!name || !(price>=0) || !cat){ $("pfOk").style.display="none"; alert("Please fill name, price and category."); return; }
+  const btn=$("pfSave"); btn.disabled=true; btn.textContent="Saving…";
+  try{
+    const id=$("pfId").value || null;
+    const old = id ? products.find(x=>x.id===id) : null;
+    let imageUrl = old?.imageUrl || "", imagePath = old?.imagePath || "";
+    const f=$("pfImage").files[0];
+    if(f){
+      if(old?.imagePath) await removeImage(old.imagePath);
+      const up = await uploadImage(f,"product-images"); imageUrl=up.url; imagePath=up.path;
+    }
+    const data={name, price, categoryId:cat, description:$("pfDesc").value.trim(), imageUrl, imagePath, createdAt: old?.createdAt || serverTimestamp()};
+    if(id) await updateDoc(doc(db,"products",id), data);
+    else await addDoc(collection(db,"products"), data);
+    $("pfOk").style.display="block";
+    await refreshAll(); $("productFormCard").style.display="none";
+  }catch(e){ alert("Save failed: "+e.message); }
+  btn.disabled=false; btn.textContent="Save Product";
+};
+async function delProduct(id){
+  const p = products.find(x=>x.id===id); if(!p) return;
+  if(!confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
+  try{ await deleteDoc(doc(db,"products",id)); await removeImage(p.imagePath); await refreshAll(); }
+  catch(e){ alert("Delete failed: "+e.message); }
+}
+
+/* ---------------- categories ---------------- */
+function renderCats(){
+  const w=$("catList");
+  if(!categories.length){ w.innerHTML=`<div class="card"><p class="muted">No categories yet. Create a parent category first (e.g. Women), then sub-categories (Lawn, Chiffon…).</p></div>`; return; }
+  const ps=[...categories].sort((a,b)=>(a.order||0)-(b.order||0));
+  w.innerHTML = ps.map(c=>`
+    <div class="list-item">
+      <div class="info"><b>${esc(c.name)}</b>
+        <small>${c.parentId&&catMap()[c.parentId] ? "under "+esc(catMap()[c.parentId].name) : '<span class="tag">Parent</span>'} · order ${c.order??0}</small></div>
+      <div class="actions">
+        <button class="btn btn-ghost btn-sm" data-edit-c="${c.id}">Edit</button>
+        <button class="btn btn-danger btn-sm" data-del-c="${c.id}">Delete</button>
+      </div>
+    </div>`).join("");
+  w.querySelectorAll("[data-edit-c]").forEach(b=>b.onclick=()=>editCat(b.dataset.editC));
+  w.querySelectorAll("[data-del-c]").forEach(b=>b.onclick=()=>delCat(b.dataset.delC));
+}
+function fillParentSelect(sel, excludeId){
+  const ps=categories.filter(c=>!c.parentId && c.id!==excludeId);
+  sel.innerHTML = `<option value="">Top level (no parent)</option>` +
+    ps.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+}
+function resetCatForm(){
+  $("cfId").value=""; $("cfName").value=""; $("cfOrder").value="0";
+  $("cfTitle").textContent="Add Category"; fillParentSelect($("cfParent"));
+}
+$("addCatBtn").onclick=()=>{ resetCatForm(); $("catFormCard").style.display="block"; $("cfName").focus(); };
+$("cfCancel").onclick=()=>{ $("catFormCard").style.display="none"; };
+function editCat(id){
+  const c=categories.find(x=>x.id===id); if(!c) return;
+  resetCatForm(); $("cfTitle").textContent="Edit Category"; $("cfId").value=id;
+  $("cfName").value=c.name||""; $("cfOrder").value=c.order??0;
+  fillParentSelect($("cfParent"), id); $("cfParent").value=c.parentId||"";
+  $("catFormCard").style.display="block";
+}
+$("cfSave").onclick=async()=>{
+  const name=$("cfName").value.trim(); if(!name){ alert("Category name is required."); return; }
+  const data={name, parentId:$("cfParent").value||null, order:Number($("cfOrder").value)||0};
+  try{
+    const id=$("cfId").value;
+    if(id) await updateDoc(doc(db,"categories",id), data);
+    else await addDoc(collection(db,"categories"), data);
+    $("catFormCard").style.display="none"; await refreshAll();
+  }catch(e){ alert("Save failed: "+e.message); }
+};
+async function delCat(id){
+  const c=categories.find(x=>x.id===id); if(!c) return;
+  const used = products.filter(p=>p.categoryId===id || categories.some(k=>k.parentId===id && p.categoryId===k.id));
+  if(used.length){ alert(`Cannot delete "${c.name}" — ${used.length} product(s) use it or its sub-categories. Move or delete those products first.`); return; }
+  const kids = categories.filter(k=>k.parentId===id);
+  if(kids.length && !confirm(`"${c.name}" has ${kids.length} sub-categor(ies) which will also be deleted. Continue?`)) return;
+  if(!kids.length && !confirm(`Delete category "${c.name}"?`)) return;
+  try{
+    for(const k of kids) await deleteDoc(doc(db,"categories",k.id));
+    await deleteDoc(doc(db,"categories",id));
+    await refreshAll();
+  }catch(e){ alert("Delete failed: "+e.message); }
+}
+
+/* ---------------- site content ---------------- */
+function renderContent(){
+  $("ctHeroTitle").value=siteDoc.heroTitle||"";
+  $("ctHeroSub").value=siteDoc.heroSubtitle||"";
+  $("ctAnnounce").value=siteDoc.announcement||"";
+  $("ctAbout").value=siteDoc.aboutText||"";
+  $("ctWa").value=siteDoc.whatsappNumber||"";
+}
+$("ctSave").onclick=async()=>{
+  const wa=$("ctWa").value.replace(/\D/g,"");
+  const data={heroTitle:$("ctHeroTitle").value.trim(), heroSubtitle:$("ctHeroSub").value.trim(),
+    announcement:$("ctAnnounce").value.trim(), aboutText:$("ctAbout").value.trim()};
+  if(wa) data.whatsappNumber=wa;
+  try{ await setDoc(doc(db,"siteContent","main"), data, {merge:true});
+    $("ctOk").style.display="block"; setTimeout(()=>$("ctOk").style.display="none",3000);
+    siteDoc={...siteDoc,...data};
+  }catch(e){ alert("Save failed: "+e.message); }
+};
+
+/* ---------------- blog ---------------- */
+function renderPosts(){
+  const w=$("postList"), ps=window._posts||[];
+  if(!ps.length){ w.innerHTML=`<div class="card"><p class="muted">No posts yet. Share style notes or new arrivals with <b>+ Add Post</b>.</p></div>`; return; }
+  w.innerHTML=ps.map(p=>`
+    <div class="list-item">
+      ${p.imageUrl?`<img src="${esc(p.imageUrl)}" alt="">`:`<div class="ph">Post</div>`}
+      <div class="info"><b>${esc(p.title)}</b><small>${esc((p.body||"").slice(0,80))}…</small></div>
+      <div class="actions">
+        <button class="btn btn-ghost btn-sm" data-edit-b="${p.id}">Edit</button>
+        <button class="btn btn-danger btn-sm" data-del-b="${p.id}">Delete</button>
+      </div>
+    </div>`).join("");
+  w.querySelectorAll("[data-edit-b]").forEach(b=>b.onclick=()=>editPost(b.dataset.editB));
+  w.querySelectorAll("[data-del-b]").forEach(b=>b.onclick=()=>delPost(b.dataset.delB));
+}
+function resetPostForm(){
+  $("bfId").value=""; $("bfName").value=""; $("bfBody").value=""; $("bfImage").value="";
+  $("bfPreview").style.display="none"; $("bfTitle").textContent="Add Post";
+}
+$("addPostBtn").onclick=()=>{ resetPostForm(); $("postFormCard").style.display="block"; $("bfName").focus(); };
+$("bfCancel").onclick=()=>{ $("postFormCard").style.display="none"; };
+$("bfImage").onchange=e=>{ const f=e.target.files[0]; if(f){ $("bfPreview").src=URL.createObjectURL(f); $("bfPreview").style.display="block"; } };
+function editPost(id){
+  const p=(window._posts||[]).find(x=>x.id===id); if(!p) return;
+  resetPostForm(); $("bfTitle").textContent="Edit Post"; $("bfId").value=id;
+  $("bfName").value=p.title||""; $("bfBody").value=p.body||"";
+  if(p.imageUrl){ $("bfPreview").src=p.imageUrl; $("bfPreview").style.display="block"; }
+  $("postFormCard").style.display="block"; window.scrollTo({top:0,behavior:"smooth"});
+}
+$("bfSave").onclick=async()=>{
+  const title=$("bfName").value.trim(), body=$("bfBody").value.trim();
+  if(!title||!body){ alert("Title and body are required."); return; }
+  const btn=$("bfSave"); btn.disabled=true; btn.textContent="Saving…";
+  try{
+    const id=$("bfId").value||null;
+    const old=id?(window._posts||[]).find(x=>x.id===id):null;
+    let imageUrl=old?.imageUrl||"", imagePath=old?.imagePath||"";
+    const f=$("bfImage").files[0];
+    if(f){ if(old?.imagePath) await removeImage(old.imagePath);
+      const up=await uploadImage(f,"blog-images"); imageUrl=up.url; imagePath=up.path; }
+    const data={title, body, imageUrl, imagePath, createdAt: old?.createdAt || serverTimestamp()};
+    if(id) await updateDoc(doc(db,"posts",id), data);
+    else await addDoc(collection(db,"posts"), data);
+    $("postFormCard").style.display="none"; await refreshAll();
+  }catch(e){ alert("Save failed: "+e.message); }
+  btn.disabled=false; btn.textContent="Save Post";
+};
+async function delPost(id){
+  if(!confirm("Delete this post?")) return;
+  const p=(window._posts||[]).find(x=>x.id===id);
+  try{ await deleteDoc(doc(db,"posts",id)); await removeImage(p?.imagePath); await refreshAll(); }
+  catch(e){ alert("Delete failed: "+e.message); }
+}
+</script>
+</body>
+</html>
