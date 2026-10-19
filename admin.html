@@ -80,6 +80,12 @@
     letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:3px 10px;margin-top:4px}
 
   .preview-img{max-width:180px;border-radius:10px;margin-top:10px;display:none}
+  .thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .thumb{position:relative;width:86px;height:104px;border-radius:10px;overflow:hidden;
+    border:1px solid var(--line,#e5e0da);background:#f4efe8}
+  .thumb img{width:100%;height:100%;object-fit:cover}
+  .thumb button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;
+    border:0;background:rgba(20,12,10,.75);color:#fff;font-size:.95rem;line-height:1;cursor:pointer}
   .ok{display:none;background:#e7f6ec;color:#1c7a38;border-radius:10px;padding:11px 14px;
     font-size:.88rem;margin-bottom:14px}
   .muted{color:var(--muted);font-size:.88rem}
@@ -129,7 +135,7 @@
           <div class="field"><label>Product name *</label><input id="pfName" placeholder="e.g. Premium Lawn 3-Piece"></div>
           <div class="field"><label>Price (PKR) *</label><input id="pfPrice" type="number" min="0" placeholder="e.g. 4850"></div>
           <div class="field"><label>Category *</label><select id="pfCategory"></select></div>
-          <div class="field"><label>Photo</label><input id="pfImage" type="file" accept="image/*"><img class="preview-img" id="pfPreview" alt=""></div>
+          <div class="field"><label>Photos <small style="font-weight:400;color:#8a7f78">(you can select more than one)</small></label><input id="pfImage" type="file" accept="image/*" multiple><div class="thumbs" id="pfThumbs"></div></div>
           <div class="field full"><label>Description</label><textarea id="pfDesc" placeholder="Fabric, sizes, what's included…"></textarea></div>
         </div>
         <div style="display:flex;gap:10px;margin-top:6px">
@@ -324,21 +330,47 @@ function renderProducts(){
   w.querySelectorAll("[data-edit-p]").forEach(b=>b.onclick=()=>editProduct(b.dataset.editP));
   w.querySelectorAll("[data-del-p]").forEach(b=>b.onclick=()=>delProduct(b.dataset.delP));
 }
+/* Multi-photo state for the product form */
+let pfKept = [];    // existing image URLs kept
+let pfNewFiles = []; // newly selected File objects
+const pImages = p => (p.images && p.images.length ? p.images : (p.imageUrl ? [p.imageUrl] : []));
+function renderPfThumbs(){
+  const w = $("pfThumbs");
+  w.innerHTML = "";
+  pfKept.forEach((u,i)=>{
+    const d = document.createElement("div"); d.className="thumb";
+    d.innerHTML = `<img src="${esc(u)}" alt=""><button data-k="${i}" aria-label="Remove photo">×</button>`;
+    d.querySelector("button").onclick = ()=>{ pfKept.splice(i,1); renderPfThumbs(); };
+    w.appendChild(d);
+  });
+  pfNewFiles.forEach((f,i)=>{
+    const url = URL.createObjectURL(f);
+    const d = document.createElement("div"); d.className="thumb";
+    d.innerHTML = `<img src="${url}" alt=""><button data-n="${i}" aria-label="Remove photo">×</button>`;
+    d.querySelector("button").onclick = ()=>{ URL.revokeObjectURL(url); pfNewFiles.splice(i,1); renderPfThumbs(); };
+    w.appendChild(d);
+  });
+}
 function resetProductForm(){
   $("pfId").value=""; $("pfName").value=""; $("pfPrice").value=""; $("pfDesc").value="";
-  $("pfImage").value=""; $("pfPreview").style.display="none"; $("pfOk").style.display="none";
+  $("pfImage").value=""; $("pfOk").style.display="none";
+  pfKept=[]; pfNewFiles=[]; renderPfThumbs();
   $("pfTitle").textContent="Add Product"; fillCatSelect($("pfCategory"));
 }
 $("addProductBtn").onclick = ()=>{ resetProductForm(); $("productFormCard").style.display="block"; $("pfName").focus(); };
 $("pfCancel").onclick = ()=>{ $("productFormCard").style.display="none"; };
-$("pfImage").onchange = e=>{ const f=e.target.files[0]; if(f){ $("pfPreview").src=URL.createObjectURL(f); $("pfPreview").style.display="block"; } };
+$("pfImage").onchange = e=>{
+  for (const f of e.target.files) pfNewFiles.push(f);
+  $("pfImage").value="";
+  renderPfThumbs();
+};
 function editProduct(id){
   const p = products.find(x=>x.id===id); if(!p) return;
   resetProductForm();
   $("pfTitle").textContent="Edit Product"; $("pfId").value=id;
   $("pfName").value=p.name||""; $("pfPrice").value=p.price??""; $("pfDesc").value=p.description||"";
   $("pfCategory").value=p.categoryId||"";
-  if(p.imageUrl){ $("pfPreview").src=p.imageUrl; $("pfPreview").style.display="block"; }
+  pfKept = pImages(p).slice(); renderPfThumbs();
   $("productFormCard").style.display="block"; window.scrollTo({top:0,behavior:"smooth"});
 }
 $("pfSave").onclick = async ()=>{
@@ -348,13 +380,17 @@ $("pfSave").onclick = async ()=>{
   try{
     const id=$("pfId").value || null;
     const old = id ? products.find(x=>x.id===id) : null;
-    let imageUrl = old?.imageUrl || "", imagePath = old?.imagePath || "";
-    const f=$("pfImage").files[0];
-    if(f){
-      if(old?.imagePath) await removeImage(old.imagePath);
-      const up = await uploadImage(f,"product-images"); imageUrl=up.url; imagePath=up.path;
+    const btn_label = `Uploading ${pfNewFiles.length} photo${pfNewFiles.length===1?"":"s"}…`;
+    if (pfNewFiles.length) btn.textContent = btn_label;
+    const uploaded = [];
+    for (const f of pfNewFiles){
+      const up = await uploadImage(f,"product-images");
+      uploaded.push(up.url);
     }
-    const data={name, price, categoryId:cat, description:$("pfDesc").value.trim(), imageUrl, imagePath, createdAt: old?.createdAt || serverTimestamp()};
+    const images = pfKept.concat(uploaded);
+    const imageUrl = images[0] || "";
+    const data={name, price, categoryId:cat, description:$("pfDesc").value.trim(),
+      images, imageUrl, createdAt: old?.createdAt || serverTimestamp()};
     if(id) await updateDoc(doc(db,"products",id), data);
     else await addDoc(collection(db,"products"), data);
     $("pfOk").style.display="block";
