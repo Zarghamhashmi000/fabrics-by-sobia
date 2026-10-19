@@ -109,6 +109,44 @@
   .card .add{margin-top:12px;width:100%;background:var(--brand);color:#fff;border:0;border-radius:10px;
     padding:11px;font-weight:600;font-size:.9rem;cursor:pointer}
   .card .add:hover{background:var(--brand-dark)}
+  .card{position:relative}
+  .sale-badge{position:absolute;top:10px;left:10px;background:#d43d3d;color:#fff;font-size:.68rem;
+    font-weight:700;letter-spacing:.08em;padding:5px 11px;border-radius:999px;z-index:2}
+  .price .old{color:var(--muted);font-weight:400;font-size:.85em;margin-left:8px;text-decoration:line-through}
+  /* Wishlist heart on cards */
+  .wish-heart{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;
+    background:rgba(255,255,255,.94);color:#8a7f78;cursor:pointer;z-index:2;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.16);
+    transition:transform .15s ease,color .15s ease}
+  .wish-heart:hover{transform:scale(1.1)}
+  .wish-heart svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+  .wish-heart.on{color:#e0245e}
+  .wish-heart.on svg{fill:#e0245e;stroke:#e0245e}
+  [data-theme="dark"] .wish-heart{background:rgba(34,26,23,.94)}
+  /* Sizes */
+  .size-label{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--muted);margin:16px 0 2px}
+  .size-chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+  .size-chip{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:9px 18px;
+    cursor:pointer;font-weight:600;font-size:.9rem;color:var(--ink);transition:all .15s ease}
+  .size-chip:hover{border-color:var(--brand)}
+  .size-chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+  /* Search bar */
+  .searchbar{max-height:0;overflow:hidden;transition:max-height .25s ease;
+    background:var(--card);border-bottom:1px solid transparent}
+  .searchbar.open{max-height:78px;border-bottom-color:var(--line)}
+  .searchbar .wrap{display:flex;gap:10px;padding:14px 20px;align-items:center}
+  .searchbar input{flex:1;border:1.5px solid var(--line);border-radius:999px;padding:11px 20px;
+    font-size:.95rem;background:var(--bg);color:var(--ink);outline:none;font-family:inherit}
+  .searchbar input:focus{border-color:var(--brand)}
+  .searchbar .clr{border:0;background:none;font-size:1.5rem;color:var(--muted);cursor:pointer;display:none;line-height:1}
+  .searchbar.has-q .clr{display:block}
+  .search-meta{text-align:center;color:var(--muted);font-size:.85rem;margin:2px 0 16px}
+  /* Header icon badge */
+  .icon-badge{position:absolute;top:-7px;right:-7px;background:var(--gold);color:#3a2a12;font-size:.68rem;
+    font-weight:700;min-width:20px;height:20px;border-radius:999px;display:inline-flex;align-items:center;
+    justify-content:center;padding:0 5px}
+  .theme-btn{position:relative}
   .empty{background:var(--card);border:1.5px dashed var(--line);border-radius:var(--radius);
     padding:56px 24px;text-align:center;color:var(--muted);grid-column:1/-1}
   .empty h3{color:var(--brand);font-size:1.4rem;margin-bottom:8px}
@@ -229,6 +267,12 @@
   .modal .x{position:absolute;top:12px;right:16px;background:var(--card);border:1px solid var(--line);
     width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.2rem;color:var(--muted);z-index:10;
     box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  .modal .wx{position:absolute;top:12px;left:16px;background:var(--card);border:1px solid var(--line);
+    width:36px;height:36px;border-radius:50%;cursor:pointer;color:#8a7f78;z-index:10;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  .modal .wx svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+  .modal .wx.on{color:#e0245e}
+  .modal .wx.on svg{fill:#e0245e;stroke:#e0245e}
   .modal h2{color:var(--brand);font-size:1.6rem;margin:8px 0 10px;line-height:1.28;overflow-wrap:break-word}
   .modal .price{font-size:1.3rem;font-weight:700;color:var(--brand);margin:10px 0}
   .modal .desc{color:var(--muted);font-size:.95rem;margin-bottom:18px;white-space:pre-line}
@@ -284,6 +328,8 @@
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-actions">
+    <button class="theme-btn" id="searchToggle" aria-label="Search products"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+    <button class="theme-btn" id="wishOpen" aria-label="Wishlist"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><span class="icon-badge" id="wishCount" style="display:none">0</span></button>
     <button class="theme-btn" id="themeToggle" aria-label="Switch to dark mode"></button>
     <button class="cart-btn" id="cartOpen" aria-label="Open bag">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7l-1-4H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg>
@@ -292,6 +338,13 @@
     </div>
   </div>
 </header>
+
+<div class="searchbar" id="searchbar">
+  <div class="wrap">
+    <input id="searchInput" placeholder="Search suits, lawn, chiffon…" aria-label="Search products" autocomplete="off">
+    <button class="clr" id="searchClear" aria-label="Clear search">×</button>
+  </div>
+</div>
 
 <div class="hero" id="top">
   <div class="wrap">
@@ -385,14 +438,24 @@
   </div>
 </aside>
 
+<aside class="drawer" id="wishDrawer" aria-label="Wishlist">
+  <header><div class="d-head"><h3>Saved Items</h3><button class="close" id="wishClose" aria-label="Close">×</button></div></header>
+  <div class="items" id="wishItems"></div>
+</aside>
+
 <div class="modal" id="qvModal">
   <div class="box" id="qvBox">
     <button class="x" data-close aria-label="Close">×</button>
+    <button class="wx" id="qvWish" aria-label="Save to wishlist"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></button>
     <div class="m-img" id="qvImg"></div>
     <div class="m-body">
       <div class="cat" id="qvCat" style="font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600"></div>
       <h2 id="qvName"></h2>
       <div class="price" id="qvPrice"></div>
+      <div id="qvSizes" style="display:none">
+        <div class="size-label">Select size</div>
+        <div class="size-chips" id="qvSizeChips"></div>
+      </div>
       <div class="desc" id="qvDesc"></div>
       <div class="row">
         <div class="qty">
@@ -443,7 +506,15 @@ let posts = [];        // {id,title,body,imageUrl}
 let selParent = "all", selChild = null;
 let cart = [];
 try { cart = JSON.parse(localStorage.getItem("fsb_cart") || "[]"); } catch(e){ cart = []; }
-let qvId = null, qvQty = 1;
+/* migrate old bag items to keyed {key,id,size,qty} shape */
+cart = cart.map(i => ({ key: i.key || (i.id + "|" + (i.size || "")), id: i.id, size: i.size || "", qty: i.qty || 1 }));
+let qvId = null, qvQty = 1, qvSize = "";
+/* Wishlist: saved on this device/browser only (no login needed).
+   It persists when the customer returns on the same phone/browser. */
+let wish = [];
+try { wish = JSON.parse(localStorage.getItem("fsb_wish") || "[]"); } catch(e){ wish = []; }
+let searchQ = "";
+function saveWish(){ try{ localStorage.setItem("fsb_wish", JSON.stringify(wish)); }catch(e){} }
 
 /* ---------------- helpers ---------------- */
 const $ = id => document.getElementById(id);
@@ -472,6 +543,9 @@ const catMap = () => Object.fromEntries(categories.map(c => [c.id, c]));
 /* All photos of a product: images[] array, falling back to legacy imageUrl */
 const pImages = p => (p.images && p.images.length ? p.images : (p.imageUrl ? [p.imageUrl] : []));
 const pThumb = p => pImages(p)[0] || "";
+const saleOf = p => (p.salePrice != null && Number(p.salePrice) < Number(p.price)) ? Number(p.salePrice) : null;
+const curPrice = p => saleOf(p) != null ? saleOf(p) : Number(p.price);
+const HEART_SVG = '<svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>';
 function catLabel(p){
   const c = catMap()[p.categoryId];
   if(!c) return "Collection";
@@ -480,7 +554,7 @@ function catLabel(p){
 }
 function saveCart(){ localStorage.setItem("fsb_cart", JSON.stringify(cart)); }
 function cartCount(){ return cart.reduce((a,i)=>a+i.qty,0); }
-function cartTotal(){ const m=prodMap(); return cart.reduce((a,i)=>a+(m[i.id]?m[i.id].price*i.qty:0),0); }
+function cartTotal(){ const m=prodMap(); return cart.reduce((a,i)=>a+(m[i.id]?curPrice(m[i.id])*i.qty:0),0); }
 
 /* ---------------- firebase ---------------- */
 async function loadData(){
@@ -521,10 +595,15 @@ function renderStatic(){
 function parents(){ return categories.filter(c=>!c.parentId).sort((a,b)=>(a.order||0)-(b.order||0)); }
 function childrenOf(pid){ return categories.filter(c=>c.parentId===pid).sort((a,b)=>(a.order||0)-(b.order||0)); }
 function visibleProducts(){
-  if (selParent === "all") return products;
-  const kids = new Set(childrenOf(selParent).map(c=>c.id));
-  let list = products.filter(p => p.categoryId===selParent || kids.has(p.categoryId));
-  if (selChild) list = list.filter(p => p.categoryId===selChild);
+  if (selParent === "all") var list = products.slice();
+  else {
+    const kids = new Set(childrenOf(selParent).map(c=>c.id));
+    var list = products.filter(p => p.categoryId===selParent || kids.has(p.categoryId));
+    if (selChild) list = list.filter(p => p.categoryId===selChild);
+  }
+  if (searchQ){
+    list = list.filter(p => (p.name + " " + (p.description||"") + " " + catLabel(p)).toLowerCase().includes(searchQ));
+  }
   return list;
 }
 function renderChips(){
@@ -542,25 +621,38 @@ function renderChips(){
 }
 function renderGrid(){
   const g = $("productGrid"), list = visibleProducts();
+  const meta = searchQ ? `<div class="search-meta">${list.length} result${list.length===1?"":"s"} for “${esc(searchQ)}”</div>` : "";
   if (!list.length){
-    g.innerHTML = `<div class="empty"><h3>New Collection Coming Soon</h3>
+    g.innerHTML = meta + (searchQ
+      ? `<div class="empty"><h3>No matches</h3><p>Try a different word — e.g. lawn, chiffon, kurti.</p></div>`
+      : `<div class="empty"><h3>New Collection Coming Soon</h3>
       <p>Our latest pieces are being added. Tap below to ask us on WhatsApp.</p>
       <p style="margin-top:16px"><a class="btn btn-wa" target="_blank" rel="noopener"
-      href="${waLink("Assalam-o-Alaikum, Fabrics by Sobia! Please share your latest collection.")}">Ask on WhatsApp</a></p></div>`;
+      href="${waLink("Assalam-o-Alaikum, Fabrics by Sobia! Please share your latest collection.")}">Ask on WhatsApp</a></p></div>`);
     return;
   }
-  g.innerHTML = list.map(p=>`
+  g.innerHTML = meta + list.map(p=>{
+    const s = saleOf(p), hasSizes = p.sizes && p.sizes.length > 0, wished = wish.includes(p.id);
+    return `
     <div class="card" data-id="${p.id}">
+      ${s ? `<div class="sale-badge">SALE</div>` : ""}
+      <button class="wish-heart${wished?" on":""}" data-wish="${p.id}" aria-label="Save to wishlist">${HEART_SVG}</button>
       ${pThumb(p) ? `<img src="${esc(pThumb(p))}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
                    : `<div class="ph">Fabrics<br>by Sobia</div>`}
       <div class="body">
         <div class="cat">${catLabel(p)}</div>
         <h3>${esc(p.name)}</h3>
-        <div class="price">${fmt(p.price)}</div>
-        <button class="add" data-add="${p.id}">Add to Bag</button>
+        <div class="price">${fmt(curPrice(p))}${s ? `<span class="old">${fmt(p.price)}</span>` : ""}</div>
+        <button class="add" data-add="${p.id}">${hasSizes ? "Select Options" : "Add to Bag"}</button>
       </div>
-    </div>`).join("");
-  g.querySelectorAll("[data-add]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); addToCart(b.dataset.add,1); });
+    </div>`;}).join("");
+  g.querySelectorAll("[data-add]").forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const p = prodMap()[b.dataset.add]; if(!p) return;
+    if (p.sizes && p.sizes.length) openQV(p.id);   /* must choose a size first */
+    else addToCart(p.id, "", 1);
+  });
+  g.querySelectorAll("[data-wish]").forEach(b=>b.onclick=e=>{ e.stopPropagation(); toggleWish(b.dataset.wish); });
   g.querySelectorAll(".card").forEach(c=>c.onclick=()=>openQV(c.dataset.id));
 }
 function renderCatCards(){
@@ -639,18 +731,36 @@ function openQV(id){
   renderQVGallery(p);
   $("qvCat").innerHTML = catLabel(p);
   $("qvName").textContent = p.name;
-  $("qvPrice").textContent = fmt(p.price);
+  const s = saleOf(p);
+  $("qvPrice").innerHTML = `${fmt(curPrice(p))}${s ? `<span class="old">${fmt(p.price)}</span>` : ""}`;
+  /* sizes */
+  const sizes = p.sizes && p.sizes.length ? p.sizes : [];
+  qvSize = sizes[0] || "";
+  if (sizes.length){
+    $("qvSizes").style.display = "block";
+    $("qvSizeChips").innerHTML = sizes.map(z =>
+      `<button class="size-chip${z===qvSize?" on":""}" data-z="${esc(z)}">${esc(z)}</button>`).join("");
+    $("qvSizeChips").querySelectorAll(".size-chip").forEach(b=>b.onclick=()=>{
+      qvSize = b.dataset.z;
+      $("qvSizeChips").querySelectorAll(".size-chip").forEach(x=>x.classList.toggle("on", x===b));
+    });
+  } else $("qvSizes").style.display = "none";
+  /* wishlist heart */
+  const qw = $("qvWish");
+  qw.classList.toggle("on", wish.includes(p.id));
+  qw.onclick = e => { e.stopPropagation(); toggleWish(p.id, true); };
   $("qvDesc").textContent = p.description || "";
   $("qvModal").classList.add("show");
 }
 $("qvPlus").onclick = ()=>{ qvQty++; $("qvQty").textContent=qvQty; };
 $("qvMinus").onclick = ()=>{ if(qvQty>1){qvQty--; $("qvQty").textContent=qvQty;} };
-$("qvAdd").onclick = ()=>{ addToCart(qvId, qvQty); $("qvModal").classList.remove("show"); };
+$("qvAdd").onclick = ()=>{ addToCart(qvId, qvSize, qvQty); $("qvModal").classList.remove("show"); };
 
 /* ---------------- cart ---------------- */
-function addToCart(id, qty){
-  const it = cart.find(i=>i.id===id);
-  if (it) it.qty += qty; else cart.push({id, qty});
+function addToCart(id, size, qty){
+  const key = id + "|" + (size || "");
+  const it = cart.find(i=>i.key===key);
+  if (it) it.qty += qty; else cart.push({key, id, size:size||"", qty});
   saveCart(); updateCartBadge(); renderCartItems();
   openDrawer();
 }
@@ -664,19 +774,19 @@ function renderCartItems(){
     w.innerHTML = cart.map(i=>{ const p=m[i.id]; return `
       <div class="ci">
         ${pThumb(p)?`<img src="${esc(pThumb(p))}" alt="" loading="lazy" decoding="async">`:`<div class="ph">FSB</div>`}
-        <div class="info"><h4>${esc(p.name)}</h4><div class="p">${fmt(p.price)}</div>
-          <div class="qty"><button data-dec="${i.id}">−</button><span>${i.qty}</span><button data-inc="${i.id}">+</button></div>
+        <div class="info"><h4>${esc(p.name)}${i.size?` <small style="color:var(--muted);font-weight:500">· ${esc(i.size)}</small>`:""}</h4><div class="p">${fmt(curPrice(p))}</div>
+          <div class="qty"><button data-dec="${esc(i.key)}">−</button><span>${i.qty}</span><button data-inc="${esc(i.key)}">+</button></div>
         </div>
-        <button class="rm" data-rm="${i.id}" aria-label="Remove">×</button>
+        <button class="rm" data-rm="${esc(i.key)}" aria-label="Remove">×</button>
       </div>`;}).join("");
-    w.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{cart.find(i=>i.id===b.dataset.inc).qty++; saveCart(); updateCartBadge(); renderCartItems();});
-    w.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const it=cart.find(i=>i.id===b.dataset.dec); it.qty--; if(it.qty<1) cart=cart.filter(i=>i!==it); saveCart(); updateCartBadge(); renderCartItems();});
-    w.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{cart=cart.filter(i=>i.id!==b.dataset.rm); saveCart(); updateCartBadge(); renderCartItems();});
+    w.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{cart.find(i=>i.key===b.dataset.inc).qty++; saveCart(); updateCartBadge(); renderCartItems();});
+    w.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const it=cart.find(i=>i.key===b.dataset.dec); it.qty--; if(it.qty<1) cart=cart.filter(i=>i!==it); saveCart(); updateCartBadge(); renderCartItems();});
+    w.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{cart=cart.filter(i=>i.key!==b.dataset.rm); saveCart(); updateCartBadge(); renderCartItems();});
   }
   $("cartTotal").textContent = fmt(cartTotal());
   const btn = $("orderWa");
   if (cart.length){
-    const lines = cart.map((i,x)=>{const p=m[i.id]; return `${x+1}. ${p.name} × ${i.qty} — ${fmt(p.price*i.qty)}`;});
+    const lines = cart.map((i,x)=>{const p=m[i.id]; return `${x+1}. ${p.name}${i.size?` (Size: ${i.size})`:""} × ${i.qty} — ${fmt(curPrice(p)*i.qty)}`;});
     const msg = `Assalam-o-Alaikum, Fabrics by Sobia!\nI would like to place this order:\n\n${lines.join("\n")}\n\nTotal: ${fmt(cartTotal())}\n\nName:\nAddress:\nCity:`;
     btn.href = waLink(msg); btn.style.opacity="1"; btn.style.pointerEvents="auto";
   } else { btn.href="#"; btn.style.opacity=".45"; btn.style.pointerEvents="none"; }
@@ -685,7 +795,66 @@ function openDrawer(){ renderCartItems(); $("drawer").classList.add("open"); $("
 function closeDrawer(){ $("drawer").classList.remove("open"); $("overlay").classList.remove("show"); }
 $("cartOpen").onclick = openDrawer;
 $("cartClose").onclick = closeDrawer;
-$("overlay").onclick = ()=>{ closeDrawer(); document.querySelectorAll(".modal.show").forEach(m=>m.classList.remove("show")); };
+$("overlay").onclick = ()=>{ closeDrawer(); closeWish(); document.querySelectorAll(".modal.show").forEach(m=>m.classList.remove("show")); };
+
+/* ---------------- wishlist ---------------- */
+function updateWishBadge(){
+  const b = $("wishCount");
+  b.textContent = wish.length;
+  b.style.display = wish.length ? "inline-flex" : "none";
+}
+function toggleWish(id, fromQV){
+  wish = wish.includes(id) ? wish.filter(x=>x!==id) : [...wish, id];
+  saveWish(); updateWishBadge(); renderWish();
+  if (fromQV) $("qvWish").classList.toggle("on", wish.includes(id));
+  else renderGrid();
+}
+function renderWish(){
+  const w = $("wishItems"), m = prodMap();
+  wish = wish.filter(id=>m[id]);
+  if (!wish.length){
+    w.innerHTML = `<div class="cart-empty"><h3 class="serif" style="color:var(--brand);margin-bottom:8px">Nothing saved yet</h3><p>Tap the heart on any product to save it here.</p></div>`;
+    return;
+  }
+  w.innerHTML = wish.map(id=>{ const p=m[id]; const s=saleOf(p); return `
+    <div class="ci">
+      ${pThumb(p)?`<img src="${esc(pThumb(p))}" alt="" loading="lazy" decoding="async">`:`<div class="ph">FSB</div>`}
+      <div class="info"><h4>${esc(p.name)}</h4><div class="p">${fmt(curPrice(p))}${s?` <s style="color:var(--muted);font-weight:400;font-size:.8em">${fmt(p.price)}</s>`:""}</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="add" data-wadd="${p.id}" style="margin:0;width:auto;padding:9px 18px;background:var(--brand);color:#fff;border:0;border-radius:10px;font-weight:600;font-size:.85rem;cursor:pointer">${p.sizes&&p.sizes.length?"Select Options":"Add to Bag"}</button>
+        </div>
+      </div>
+      <button class="rm" data-wrm="${p.id}" aria-label="Remove">×</button>
+    </div>`;}).join("");
+  w.querySelectorAll("[data-wadd]").forEach(b=>b.onclick=()=>{
+    const p = m[b.dataset.wadd]; if(!p) return;
+    closeWish();
+    if (p.sizes && p.sizes.length) openQV(p.id);
+    else addToCart(p.id, "", 1);
+  });
+  w.querySelectorAll("[data-wrm]").forEach(b=>b.onclick=()=>{ toggleWish(b.dataset.wrm); });
+}
+function openWish(){ renderWish(); $("wishDrawer").classList.add("open"); $("overlay").classList.add("show"); }
+function closeWish(){ $("wishDrawer").classList.remove("open"); if(!$("drawer").classList.contains("open")) $("overlay").classList.remove("show"); }
+$("wishOpen").onclick = openWish;
+$("wishClose").onclick = closeWish;
+
+/* ---------------- search ---------------- */
+$("searchToggle").onclick = ()=>{
+  const bar = $("searchbar"), opening = !bar.classList.contains("open");
+  bar.classList.toggle("open");
+  if (opening){ $("searchInput").focus(); }
+  else { searchQ=""; $("searchInput").value=""; bar.classList.remove("has-q"); renderGrid(); }
+};
+$("searchInput").addEventListener("input", e=>{
+  searchQ = e.target.value.trim().toLowerCase();
+  $("searchbar").classList.toggle("has-q", !!searchQ);
+  renderGrid();
+});
+$("searchClear").onclick = ()=>{
+  $("searchInput").value=""; searchQ="";
+  $("searchbar").classList.remove("has-q"); renderGrid(); $("searchInput").focus();
+};
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".modal").classList.remove("show"));
 
 /* ---------------- boot ---------------- */
@@ -698,6 +867,7 @@ document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>b.closest(".m
   renderPosts();
   updateCartBadge();
   renderCartItems();
+  updateWishBadge();
 })();
 </script>
 </body>
