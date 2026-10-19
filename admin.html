@@ -135,6 +135,8 @@
           <div class="field"><label>Product name *</label><input id="pfName" placeholder="e.g. Premium Lawn 3-Piece"></div>
           <div class="field"><label>Price (PKR) *</label><input id="pfPrice" type="number" min="0" placeholder="e.g. 4850"></div>
           <div class="field"><label>Category *</label><select id="pfCategory"></select></div>
+          <div class="field"><label>Sizes <small style="font-weight:400;color:#8a7f78">(comma separated — e.g. S, M, L. Leave empty for one-size)</small></label><input id="pfSizes" placeholder="S, M, L, XL"></div>
+          <div class="field"><label>Sale price (PKR, optional)</label><input id="pfSale" type="number" min="0" placeholder="e.g. 3999"></div>
           <div class="field"><label>Photos <small style="font-weight:400;color:#8a7f78">(you can select more than one)</small></label><input id="pfImage" type="file" accept="image/*" multiple><div class="thumbs" id="pfThumbs"></div></div>
           <div class="field full"><label>Description</label><textarea id="pfDesc" placeholder="Fabric, sizes, what's included…"></textarea></div>
         </div>
@@ -321,7 +323,7 @@ function renderProducts(){
   w.innerHTML = products.map(p=>`
     <div class="list-item">
       ${p.imageUrl?`<img src="${esc(p.imageUrl)}" alt="">`:`<div class="ph">No photo</div>`}
-      <div class="info"><b>${esc(p.name)}</b><small>${fmt(p.price)} · ${esc(catLabel(p.categoryId))}</small></div>
+      <div class="info"><b>${esc(p.name)}</b><small>${p.salePrice!=null?fmt(p.salePrice)+" (was "+fmt(p.price)+")":fmt(p.price)} · ${esc(catLabel(p.categoryId))}${p.sizes&&p.sizes.length?" · sizes: "+esc(p.sizes.join(", ")):""}</small></div>
       <div class="actions">
         <button class="btn btn-ghost btn-sm" data-edit-p="${p.id}">Edit</button>
         <button class="btn btn-danger btn-sm" data-del-p="${p.id}">Delete</button>
@@ -354,6 +356,7 @@ function renderPfThumbs(){
 function resetProductForm(){
   $("pfId").value=""; $("pfName").value=""; $("pfPrice").value=""; $("pfDesc").value="";
   $("pfImage").value=""; $("pfOk").style.display="none";
+  $("pfSizes").value=""; $("pfSale").value="";
   pfKept=[]; pfNewFiles=[]; renderPfThumbs();
   $("pfTitle").textContent="Add Product"; fillCatSelect($("pfCategory"));
 }
@@ -370,6 +373,8 @@ function editProduct(id){
   $("pfTitle").textContent="Edit Product"; $("pfId").value=id;
   $("pfName").value=p.name||""; $("pfPrice").value=p.price??""; $("pfDesc").value=p.description||"";
   $("pfCategory").value=p.categoryId||"";
+  $("pfSizes").value=(p.sizes||[]).join(", ");
+  $("pfSale").value=(p.salePrice!=null?p.salePrice:"");
   pfKept = pImages(p).slice(); renderPfThumbs();
   $("productFormCard").style.display="block"; window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -389,8 +394,12 @@ $("pfSave").onclick = async ()=>{
     }
     const images = pfKept.concat(uploaded);
     const imageUrl = images[0] || "";
+    const sizes = $("pfSizes").value.split(",").map(s=>s.trim()).filter(Boolean);
+    const saleRaw = $("pfSale").value.trim();
+    const saleNum = saleRaw === "" ? null : Number(saleRaw);
+    const salePrice = (saleNum != null && saleNum >= 0 && saleNum < price) ? saleNum : null;
     const data={name, price, categoryId:cat, description:$("pfDesc").value.trim(),
-      images, imageUrl, createdAt: old?.createdAt || serverTimestamp()};
+      images, imageUrl, sizes, salePrice, createdAt: old?.createdAt || serverTimestamp()};
     if(id) await updateDoc(doc(db,"products",id), data);
     else await addDoc(collection(db,"products"), data);
     $("pfOk").style.display="block";
