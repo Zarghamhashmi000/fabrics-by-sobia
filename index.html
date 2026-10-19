@@ -205,12 +205,30 @@
     transform:translateY(18px) scale(.98);opacity:0;transition:transform .28s ease,opacity .28s ease}
   .modal.show .box{transform:none;opacity:1}
   .modal .box.single{grid-template-columns:1fr;max-width:640px}
-  .modal .m-img{background:#f1e7d6;min-height:320px}
-  .modal .m-img img{width:100%;height:100%;object-fit:cover;min-height:320px}
-  .modal .m-body{padding:30px}
+  .modal .m-img{background:#f1e7d6;min-height:320px;position:relative;overflow:hidden}
+  /* Swipeable photo gallery — one photo at a time, swipe / arrows / dots */
+  .gal{position:absolute;inset:0}
+  .gal-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;height:100%;
+    scrollbar-width:none;-ms-overflow-style:none}
+  .gal-track::-webkit-scrollbar{display:none}
+  .gal-slide{min-width:100%;height:100%;scroll-snap-align:center;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(420px 320px at 50% 42%,#f8f0e3,#e7d9c1)}
+  [data-theme="dark"] .gal-slide{background:radial-gradient(420px 320px at 50% 42%,#2b211b,#1b1411)}
+  .gal-slide img{width:100%;height:100%;max-height:64vh;object-fit:contain;user-select:none;-webkit-user-drag:none}
+  .gal-btn{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;font-size:1.35rem;line-height:1;
+    display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:var(--shadow)}
+  .gal-prev{left:10px}
+  .gal-next{right:10px}
+  .gal-dots{position:absolute;bottom:12px;left:0;right:0;display:flex;gap:7px;justify-content:center;z-index:2}
+  .gal-dots span{width:8px;height:8px;border-radius:50%;background:rgba(130,120,110,.5);cursor:pointer;
+    transition:transform .2s,background .2s}
+  .gal-dots span.on{background:var(--brand);transform:scale(1.3)}
+  .modal .m-body{padding:30px 30px 34px}
+  .modal .m-body .cat{display:block;margin-bottom:4px}
   .modal .x{position:absolute;top:12px;right:16px;background:var(--card);border:1px solid var(--line);
     width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.2rem;color:var(--muted)}
-  .modal h2{color:var(--brand);font-size:1.6rem;margin:6px 0 8px}
+  .modal h2{color:var(--brand);font-size:1.6rem;margin:8px 0 10px;line-height:1.28;overflow-wrap:break-word}
   .modal .price{font-size:1.3rem;font-weight:700;color:var(--brand);margin:10px 0}
   .modal .desc{color:var(--muted);font-size:.95rem;margin-bottom:18px;white-space:pre-line}
   .modal .row{display:flex;gap:12px;align-items:center;margin:16px 0}
@@ -233,6 +251,8 @@
     .nav-links{display:none}
     .modal .box{grid-template-columns:1fr}
     .modal .m-img{min-height:240px}
+    .modal .m-body{padding:24px 20px 28px}
+    .modal h2{font-size:1.35rem}
     section{padding:48px 0}
     .hero{padding:60px 20px 52px}
   }
@@ -448,6 +468,9 @@ $("themeToggle").addEventListener("click", ()=>{
 const waLink = text => "https://wa.me/" + (site.whatsappNumber || DEFAULT_WA) + "?text=" + encodeURIComponent(text);
 const prodMap = () => Object.fromEntries(products.map(p => [p.id, p]));
 const catMap = () => Object.fromEntries(categories.map(c => [c.id, c]));
+/* All photos of a product: images[] array, falling back to legacy imageUrl */
+const pImages = p => (p.images && p.images.length ? p.images : (p.imageUrl ? [p.imageUrl] : []));
+const pThumb = p => pImages(p)[0] || "";
 function catLabel(p){
   const c = catMap()[p.categoryId];
   if(!c) return "Collection";
@@ -527,7 +550,7 @@ function renderGrid(){
   }
   g.innerHTML = list.map(p=>`
     <div class="card" data-id="${p.id}">
-      ${p.imageUrl ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
+      ${pThumb(p) ? `<img src="${esc(pThumb(p))}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
                    : `<div class="ph">Fabrics<br>by Sobia</div>`}
       <div class="body">
         <div class="cat">${catLabel(p)}</div>
@@ -574,11 +597,45 @@ function renderPosts(){
 }
 
 /* ---------------- quick view ---------------- */
+let qvImgs = [], qvSlide = 0;
+function renderQVGallery(p){
+  const w = $("qvImg");
+  if (!qvImgs.length){
+    w.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;min-height:320px;color:#a58f6f;font-family:'Playfair Display',Georgia,serif">Fabrics by Sobia</div>`;
+    return;
+  }
+  const multi = qvImgs.length > 1;
+  w.innerHTML = `<div class="gal">
+    <div class="gal-track" id="galTrack">${qvImgs.map((u,i)=>
+      `<div class="gal-slide"><img src="${esc(u)}" alt="${esc(p.name)}${multi?` — photo ${i+1}`:""}"${i>0?' loading="lazy"':""} decoding="async" draggable="false"></div>`
+    ).join("")}</div>
+    ${multi ? `<button class="gal-btn gal-prev" id="galPrev" aria-label="Previous photo">‹</button>
+    <button class="gal-btn gal-next" id="galNext" aria-label="Next photo">›</button>
+    <div class="gal-dots" id="galDots">${qvImgs.map((_,i)=>`<span data-d="${i}" class="${i===0?"on":""}"></span>`).join("")}</div>` : ""}
+  </div>`;
+  if (!multi) return;
+  const track = $("galTrack");
+  const go = i => {
+    qvSlide = (i + qvImgs.length) % qvImgs.length;
+    track.scrollTo({ left: qvSlide * track.clientWidth, behavior: "smooth" });
+  };
+  $("galPrev").onclick = e => { e.stopPropagation(); go(qvSlide - 1); };
+  $("galNext").onclick = e => { e.stopPropagation(); go(qvSlide + 1); };
+  $("galDots").querySelectorAll("span").forEach(s => s.onclick = e => { e.stopPropagation(); go(+s.dataset.d); });
+  let t;
+  track.onscroll = () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      qvSlide = Math.round(track.scrollLeft / track.clientWidth);
+      $("galDots").querySelectorAll("span").forEach((s,i) => s.classList.toggle("on", i === qvSlide));
+    }, 90);
+  };
+}
 function openQV(id){
   const p = prodMap()[id]; if(!p) return;
   qvId=id; qvQty=1; $("qvQty").textContent="1";
-  $("qvImg").innerHTML = p.imageUrl ? `<img src="${esc(p.imageUrl)}" alt="${esc(p.name)}">`
-    : `<div style="display:flex;align-items:center;justify-content:center;height:100%;min-height:320px;color:#a58f6f;font-family:'Playfair Display',Georgia,serif">Fabrics by Sobia</div>`;
+  qvImgs = pImages(p); qvSlide = 0;
+  renderQVGallery(p);
   $("qvCat").innerHTML = catLabel(p);
   $("qvName").textContent = p.name;
   $("qvPrice").textContent = fmt(p.price);
@@ -605,7 +662,7 @@ function renderCartItems(){
   } else {
     w.innerHTML = cart.map(i=>{ const p=m[i.id]; return `
       <div class="ci">
-        ${p.imageUrl?`<img src="${esc(p.imageUrl)}" alt="">`:`<div class="ph">FSB</div>`}
+        ${pThumb(p)?`<img src="${esc(pThumb(p))}" alt="" loading="lazy" decoding="async">`:`<div class="ph">FSB</div>`}
         <div class="info"><h4>${esc(p.name)}</h4><div class="p">${fmt(p.price)}</div>
           <div class="qty"><button data-dec="${i.id}">−</button><span>${i.qty}</span><button data-inc="${i.id}">+</button></div>
         </div>
